@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 import sys
+import datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,6 +33,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# 替换系统的用户,方便找到user
+AUTH_USER_MODEL = 'users.UserProfile'
 
 # Application definition
 
@@ -49,6 +52,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'DjangoUeditor',
+    'django_filters',
+    'corsheaders',
+
 ]
 
 MIDDLEWARE = [
@@ -59,6 +65,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'MyShop02.urls'
@@ -135,3 +143,24 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# 设置上传文件，图片访问路径
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+
+}
+# 设置过期时间
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+}
