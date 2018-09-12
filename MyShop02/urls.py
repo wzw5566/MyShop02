@@ -22,6 +22,23 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 from rest_framework_jwt.views import obtain_jwt_token
 
+from MyShop02.settings import MEDIA_ROOT
+from django.views.static import serve
+
+from goods.views import GoodsListView
+from extra_apps import xadmin
+
+
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    url(r'^xadmin/', xadmin.site.urls),
+
+    #path('admin/', admin.site.urls),
+
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    url(r'goods/$', GoodsListView.as_view(), name="goods-list")
+    #     商品列表页
+  #  url(r'^', include(router.urls)),
 ]

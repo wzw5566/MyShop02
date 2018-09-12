@@ -41,7 +41,7 @@ class OrderInfo(models.Model):
         ("paying", "待支付"),
     )
 
-    user = models.ForeignKey(User, verbose_name="用户", on_delete=models.CASCADE,)
+    user = models.ForeignKey(User, verbose_name="用户", on_delete=models.CASCADE)
     order_sn = models.CharField(max_length=30, null=True, blank=True, unique=True, verbose_name="订单号")
     # 第三方支付使用
     trade_no = models.CharField(max_length=100, unique=True, null=True, blank=True, verbose_name=u"交易号")

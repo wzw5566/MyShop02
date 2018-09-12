@@ -1,34 +1,38 @@
-# encoding: utf-8
-__author__ = 'mtianyan'
-__date__ = '2018/2/14 0014 03:31'
-# 独立使用django的model
-import sys
+
+
 import os
-#  获取当前文件的路径，以及路径的父级文件夹名
+# 独立使用Django的model
+import sys
+
+# 获取当前文件的路径
+
+
 pwd = os.path.dirname(os.path.realpath(__file__))
-# 将项目目录加入setting
-sys.path.append(pwd + "../")
-# manage.py中
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MyShop02.settings")
-#os.environ['DJANGO_SETTINGS_MODULE'] = "MyShop02.settings"
+# 将项目的根目录加入Python的搜索路径之下
+sys.path.append(pwd+'../')
+# 设置环境变量
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MxShop.settings")
+os.environ['DJANGO_SETTINGS_MODULE'] = "MyShop02.settings"
+
 
 import django
 django.setup()
 
-# 这行代码必须在初始化django之后
-from goods.models import GoodsCategory
+# 以下的位置都可以直接使用model了
 
+# 导入的位置一定不能出错
+from apps.goods.models import GoodsCategory
 from db_tools.data.category_data import row_data
 
-# 一级分类
+# 导入数据,商品级联的类别
 for lev1_cat in row_data:
+    # 一级类别
     lev1_intance = GoodsCategory()
     lev1_intance.code = lev1_cat["code"]
     lev1_intance.name = lev1_cat["name"]
     lev1_intance.category_type = 1
     lev1_intance.save()
-
-    # 该一级分类之下的二级分类
+    # 二级类别
     for lev2_cat in lev1_cat["sub_categorys"]:
         lev2_intance = GoodsCategory()
         lev2_intance.code = lev2_cat["code"]
@@ -36,8 +40,7 @@ for lev1_cat in row_data:
         lev2_intance.category_type = 2
         lev2_intance.parent_category = lev1_intance
         lev2_intance.save()
-
-        # 该二级分类之下的三级分类
+        # 三级类别
         for lev3_cat in lev2_cat["sub_categorys"]:
             lev3_intance = GoodsCategory()
             lev3_intance.code = lev3_cat["code"]
@@ -45,4 +48,9 @@ for lev1_cat in row_data:
             lev3_intance.category_type = 3
             lev3_intance.parent_category = lev2_intance
             lev3_intance.save()
+
+
+
+
+
 
