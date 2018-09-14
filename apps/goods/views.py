@@ -6,9 +6,11 @@ from rest_framework.response import Response
 
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics, mixins, viewsets
-
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.goods.models import Goods
+from apps.goods.filters import GoodsFilter
 from apps.goods.serializer import GoodsSerializer, CategorySerializer
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
@@ -24,20 +26,13 @@ class GoodsPagination(PageNumberPagination):
 class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
     """
-    list all goods
+    获取商品列表
     """
     queryset = Goods.objects.all()
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
+    filter_class = GoodsFilter
+    search_fields = ('name', 'goods_brief', 'goods_desc')
+    ordering_fields = ('sold_num', 'shop_price')
 
-
-
-"""
-#精简前代码
-class GoodsListView(APIView):
-
-    def get(self, request, format=None):
-        goods = Goods.objects.all()[:10]
-        goods_serislizer = GoodsSerializer(goods, many=True)
-        return Response(goods_serislizer.data)
-"""
