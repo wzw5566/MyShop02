@@ -9,9 +9,9 @@ from rest_framework import generics, mixins, viewsets
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 
-from apps.goods.models import Goods
+from apps.goods.models import  Goods, GoodsCategory, GoodsImage, GoodsCategoryBrand, Banner, HotSearchWords
 from apps.goods.filters import GoodsFilter
-from apps.goods.serializer import GoodsSerializer, CategorySerializer
+from apps.goods.serializer import GoodsSerializer, CategorySerializer, GoodsImageSerializer, BrandSerializer, HotWordsSerializer,BannerSerializer
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
 class GoodsPagination(PageNumberPagination):
@@ -35,4 +35,22 @@ class GoodsListViewSet(CacheResponseMixin, mixins.ListModelMixin, viewsets.Gener
     filter_class = GoodsFilter
     search_fields = ('name', 'goods_brief', 'goods_desc')
     ordering_fields = ('sold_num', 'shop_price')
+
+
+class CategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    """
+    list:商品分类列表数据
+    """
+
+    queryset = GoodsCategory.objects.all()
+    serializer_class = CategorySerializer
+
+
+class HotSearchViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    获取热搜列表
+    """
+    queryset = HotSearchWords.objects.all()
+    serializer_class = HotWordsSerializer
+
 

@@ -11,6 +11,9 @@ class GoodsFilter(django_filters.rest_framework.FilterSet):
     price_max = django_filters.NumberFilter(name='shop_price', lookup_expr='lte')
     #商品的模糊搜索，其中'contains'代表区分大小写，'icontains'代表不区分大小写
     name = django_filters.CharFilter(name='name', lookup_expr='icontains')
+
+    def top_category_filter(self, queryset, name, value):
+        return queryset.filter()
     class Meta:
         model = Goods
         fields = ['price_min', 'price_max', 'name', 'is_hot', 'is_new']
