@@ -60,6 +60,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # 浏览器的跨域问题
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -68,7 +69,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -156,14 +156,25 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
-
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        #'rest_framework.authentication.TokenAuthentication',
+        # 将token做验证
     ),
-
+    # drf自带的限速，防止爬虫攻击，请求限速返回429状态
+    # 'DEFAULT_THROTTLE_CLASSES': (
+    #     'rest_framework.throttling.AnonRateThrottle',
+    #     'rest_framework.throttling.UserRateThrottle'
+    # ),
+    # 'DEFAULT_THROTTLE_RATES': {
+    #   匿名用户
+    #     'anon': '2/minute',
+    #     'user': '3/minute'
+    # }
 }
+
+
 # 设置过期时间
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
